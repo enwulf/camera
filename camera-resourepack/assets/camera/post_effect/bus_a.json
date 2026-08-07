@@ -1,0 +1,24 @@
+{
+    "passes": [
+        {
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "camera:post/bus_write",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "minecraft:main"
+                }
+            ],
+            "output": "minecraft:main",
+            "uniforms": {
+                "BusConfig": [
+                    {
+                        "name": "Value",
+                        "type": "vec4",
+                        "value": [ 0.003922, 0, 0, 0 ]
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,51 @@
+{
+    "targets": {
+        "state": { "width": 2, "height": 1 },
+        "state_prev": { "width": 2, "height": 1, "persistent": true },
+        "shot": { "width": 1280, "height": 720 },
+        "shot_prev": { "width": 1280, "height": 720, "persistent": true }
+    },
+    "passes": [
+        {
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "camera:post/state_clock",
+            "inputs": [
+                { "sampler_name": "Prev", "target": "state_prev" },
+                { "sampler_name": "Scene", "target": "minecraft:main" }
+            ],
+            "output": "state"
+        },
+        {
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "camera:post/state_copy",
+            "inputs": [ { "sampler_name": "In", "target": "state" } ],
+            "output": "state_prev"
+        },
+        {
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "camera:post/photo_capture",
+            "inputs": [
+                { "sampler_name": "State", "target": "state" },
+                { "sampler_name": "Prev", "target": "shot_prev" },
+                { "sampler_name": "Scene", "target": "minecraft:main", "bilinear": true }
+            ],
+            "output": "shot"
+        },
+        {
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "camera:post/sim_copy",
+            "inputs": [ { "sampler_name": "In", "target": "shot" } ],
+            "output": "shot_prev"
+        },
+        {
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "camera:post/photo_show",
+            "inputs": [
+                { "sampler_name": "Scene", "target": "minecraft:main" },
+                { "sampler_name": "Shot", "target": "shot", "bilinear": true },
+                { "sampler_name": "State", "target": "state" }
+            ],
+            "output": "minecraft:main"
+        }
+    ]
+}
