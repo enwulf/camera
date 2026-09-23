@@ -1,7 +1,7 @@
 {
     "pack": {
         "description": "Camera controls",
-        "min_format": 115,
-        "max_format": 115
+        "min_format": 121,
+        "max_format": 121
     }
 }

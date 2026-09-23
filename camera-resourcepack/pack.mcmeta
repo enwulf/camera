@@ -1,7 +1,7 @@
 {
     "pack": {
         "description": "Camera",
-        "min_format": 95,
-        "max_format": 95
+        "min_format": 97,
+        "max_format": 97
     }
 }

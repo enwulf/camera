@@ -27,6 +27,12 @@ void main() {
 
     vec4 held = texture(PrevSampler, texCoord);
 
+    bool idle = texelFetch(StateSampler, ivec2(1, 0), 0).g > 0.5;
+    if (idle) {
+        fragColor = held;
+        return;
+    }
+
     // a fresh target reads all zero, so without this the first frame holds black
     bool uninitialised = (held.a == 0.0);
 

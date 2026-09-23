@@ -12,6 +12,9 @@ layout(location = 0) out vec4 fragColor;
 // world happened to draw in that corner
 const vec2 BUS_MARK = vec2(90.0, 195.0) / 255.0;
 
+const float DAY_SECONDS = 1200.0;
+const float DONE_SECONDS = 6.0;
+
 vec4 packFloat(float v) {
     uint bits = floatBitsToUint(v);
     return vec4(uvec4(bits >> 24, bits >> 16, bits >> 8, bits) & 0xFFu) / 255.0;
@@ -34,11 +37,17 @@ void main() {
 
     bool fresh = (rawMark.a == 0.0);
     float lastMarker = floor(rawMark.r * 255.0 + 0.5);
-    bool restarted = fresh || abs(marker - lastMarker) > 0.5;
+    bool changed = !fresh && abs(marker - lastMarker) > 0.5;
+    bool restarted = changed && marker > 0.5;
 
-    float startTime = restarted ? GameTime : (unpackFloat(rawStart) - 1.0);
+    float startTime = (restarted || fresh) ? GameTime : (unpackFloat(rawStart) - 1.0);
+
+    float elapsed = GameTime - startTime;
+    if (elapsed < 0.0) elapsed += 1.0;
+    bool wasIdle = rawMark.g > 0.5;
+    bool idle = !restarted && (fresh || changed || wasIdle || elapsed * DAY_SECONDS > DONE_SECONDS);
 
     fragColor = (gl_FragCoord.x < 1.0)
         ? packFloat(startTime + 1.0)
-        : vec4(marker / 255.0, 0.0, 0.0, 1.0);
+        : vec4(marker / 255.0, idle ? 1.0 : 0.0, 0.0, 1.0);
 }

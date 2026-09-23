@@ -34,6 +34,11 @@ float unpackFloat(vec4 texel) {
 }
 
 void main() {
+    if (texelFetch(StateSampler, ivec2(1, 0), 0).g > 0.5) {
+        fragColor = vec4(texture(SceneSampler, texCoord).rgb, 1.0);
+        return;
+    }
+
     float startTime = unpackFloat(texelFetch(StateSampler, ivec2(0, 0), 0)) - 1.0;
     float elapsed = GameTime - startTime;
     if (elapsed < 0.0) elapsed += 1.0;
